@@ -47,9 +47,22 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.addEventListener('click', () => {
         const layout = document.getElementById('a5Preview');
         
+        // Show loading state
+        downloadBtn.textContent = 'Generating High Quality Image...';
+        downloadBtn.disabled = true;
+
+        // Calculate high-resolution dimensions (4x the display size)
+        const scale = 4;
+        const width = layout.offsetWidth * scale;
+        const height = layout.offsetHeight * scale;
+        
         html2canvas(layout, {
-            scale: 2, // Higher quality
+            scale: scale, // Increased scale factor for higher quality
             backgroundColor: '#ffffff',
+            useCORS: true, // Enable cross-origin image loading
+            allowTaint: true,
+            logging: false,
+            imageTimeout: 0, // No timeout for image loading
             onclone: (documentClone) => {
                 // Get the cloned layout element
                 const clonedLayout = documentClone.getElementById('a5Preview');
@@ -63,29 +76,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Ensure the cloned images maintain object-fit contain
                 leftPreview.style.objectFit = 'contain';
                 rightPreview.style.objectFit = 'contain';
+
+                // Apply crisp rendering
+                clonedLayout.style.imageRendering = 'crisp-edges';
+                leftPreview.style.imageRendering = 'crisp-edges';
+                rightPreview.style.imageRendering = 'crisp-edges';
             }
         }).then(canvas => {
-            // Calculate dimensions that maintain the A5 ratio but match preview size
-            const previewWidth = layout.offsetWidth;
-            const previewHeight = layout.offsetHeight;
-            
-            // Create a new canvas with preview dimensions
+            // Create a new canvas with high resolution dimensions
             const finalCanvas = document.createElement('canvas');
-            finalCanvas.width = previewWidth * 2; // Double size for better quality
-            finalCanvas.height = previewHeight * 2;
+            finalCanvas.width = width;
+            finalCanvas.height = height;
             const ctx = finalCanvas.getContext('2d');
+            
+            // Enable image smoothing for better quality
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             
             // Draw with white background
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+            ctx.fillRect(0, 0, width, height);
             
-            // Draw the captured content at the same proportions as preview
-            ctx.drawImage(canvas, 0, 0, finalCanvas.width, finalCanvas.height);
+            // Draw the captured content at high resolution
+            ctx.drawImage(canvas, 0, 0, width, height);
             
+            // Create download link with maximum quality PNG
             const link = document.createElement('a');
-            link.download = 'a5-layout.png';
+            link.download = 'id-card-layout.png';
             link.href = finalCanvas.toDataURL('image/png', 1.0);
+            
+            // Trigger download
             link.click();
+            
+            // Reset button state
+            downloadBtn.textContent = 'Download Layout';
+            downloadBtn.disabled = false;
+        }).catch(error => {
+            console.error('Error generating image:', error);
+            downloadBtn.textContent = 'Download Layout';
+            downloadBtn.disabled = false;
+            alert('Error generating image. Please try again.');
         });
     });
 });
