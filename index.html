@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Layout Maker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>ID Card Layout Maker</h1>
+        
+        <div class="upload-section">
+            <div class="upload-box">
+                <label for="leftImage">Front Side</label>
+                <input type="file" id="leftImage" accept="image/*">
+            </div>
+            <div class="upload-box">
+                <label for="rightImage">Back Side</label>
+                <input type="file" id="rightImage" accept="image/*">
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="image-controls left-controls">
+                <h3>Front Side Adjustments</h3>
+                <div class="compact-controls">
+                    <div class="control-group">
+                        <label for="leftBrightness">Brightness</label>
+                        <input type="range" id="leftBrightness" min="50" max="150" value="100">
+                    </div>
+                    <div class="control-group">
+                        <label for="leftContrast">Contrast</label>
+                        <input type="range" id="leftContrast" min="50" max="150" value="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-controls right-controls">
+                <h3>Back Side Adjustments</h3>
+                <div class="compact-controls">
+                    <div class="control-group">
+                        <label for="rightBrightness">Brightness</label>
+                        <input type="range" id="rightBrightness" min="50" max="150" value="100">
+                    </div>
+                    <div class="control-group">
+                        <label for="rightContrast">Contrast</label>
+                        <input type="range" id="rightContrast" min="50" max="150" value="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <div id="a5Preview" class="a5-layout">
+                <div class="image-container left">
+                    <img id="leftPreview" alt="Left preview">
+                </div>
+                <div class="image-container right">
+                    <img id="rightPreview" alt="Right preview">
+                </div>
+            </div>
+        </div>
+
+        <button id="downloadBtn" class="download-btn">Download Layout</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
